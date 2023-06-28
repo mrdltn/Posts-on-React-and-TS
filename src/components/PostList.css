@@ -1,0 +1,21 @@
+.post {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.deleteBtn {
+    margin-left: 20px;
+}
+.deleteBtn svg {
+    font-size: 30px;
+}
+
+.title {
+    font-size: large;
+    font-weight:600;
+}
+
+.heart {
+    margin-bottom: 30px;
+}
