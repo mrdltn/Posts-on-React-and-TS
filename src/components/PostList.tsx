@@ -1,5 +1,4 @@
 import React, {useState, ChangeEvent, KeyboardEvent, MouseEventHandler} from "react";
-// import { PostComponent } from "./PostComponent";
 import { FilterValuesType } from "../App";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -16,14 +15,12 @@ export type PostType = {
 type PropsType = {
     mainTitle: string
     posts: Array<PostType>
-    // posts: PostType[] //идентичная запись
     changeFilter: (value: FilterValuesType) => void
     deletePost: (id: string) => void
     addPost: (title: string, body: string) => void
     changePostLiked: (postItem: string, isLike: boolean) => void
-    // findPost: () => void
-}
 
+}
 
 
 export function PostList(propsiki: PropsType) {
@@ -59,13 +56,10 @@ export function PostList(propsiki: PropsType) {
         }
     }
 
-
     const onAllClickHandler = () => propsiki.changeFilter('all');
     const onFavoritesClickHandler = () => propsiki.changeFilter('favorites');
 
-
     const [searchTerm, setSearchTerm] = useState('');
-    console.log(searchTerm);
 
     const handleChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setSearchTerm(e.target.value)
@@ -92,12 +86,6 @@ export function PostList(propsiki: PropsType) {
                 className = { error ? 'error' : "" }  
             />
 
-            {/* <button onClick={(e) => {
-                propsiki.addPost(newPostTitle, newPostBody);
-                setNewPostTitle("");
-                setNewPostBody("");    
-            }}>+</button> */}
-            {/* ///////// произвел рефакторинг кода - вынес функции вне JSX-разметки(так с каждым обработчиком...) */}
             <button onClick={addPost}>+</button> 
             { error && <div className="error-message">{error}</div> }
         </div>
@@ -109,82 +97,49 @@ export function PostList(propsiki: PropsType) {
                 type="text"
                 placeholder="Search post by title"
                 className="search_input"
-                id='search'
                 onChange = {handleChange} 
             />
         </div>
         <br />
-{/* /////////////////////////////////////        */}
-        {/* <div>
-            <div className="form">
-                <form className="search_form">
-                    <input 
-                        autoFocus
-                        autoComplete='off'
-                        type="text"
-                        placeholder="Search post by title"
-                        className="search_input"
-                        // onChange = {(event) => setSearchTerm(event.target.value)} 
-                    />
-                </form>
-            </div>
-        </div> */}
-{/* /////////////////////////////////////        */}
-
 
         <ul>
             {
                 propsiki.posts.filter((postItem) => {
-                    return searchTerm.toLowerCase() === '' ? postItem : postItem.title.toLowerCase().includes(searchTerm)
-                })
-                
-                .map(postItem => {
-                    const onDeleteHandler = () => {propsiki.deletePost(postItem.id)};
-                
-                    const onPostChangeHandler = () => {
-                        // console.log(`id=${postItem.id} Whant to change! ${postItem.isLike}`);
-                        propsiki.changePostLiked(postItem.id, !postItem.isLike);
-                    }
+                    return searchTerm.toLowerCase() === '' ? postItem : postItem.title
+                    .toLowerCase()
+                    .includes(searchTerm)
+                    })
+                    .map(postItem => {
+                        const onDeleteHandler = () => {propsiki.deletePost(postItem.id)};
                     
-                    // const onTest = (e: ChangeEvent<HTMLInputElement>) => {
-                    //     propsiki.changePostLiked(postItem.id, e.currentTarget.checked)}
-                    const heartFill = postItem.isLike ? 'red' : '#DBD7D2';
-                    
-                    // debugger;
-                    return <li key={postItem.id}>
-                        <span className="title">{postItem.title}</span>
-                        <p>{postItem.body}
-                            <button onClick={onDeleteHandler} className="deleteBtn">
-                                <DeleteForeverIcon />
-                            </button>
-                        </p>
-                        <div>
-
-                            {/* <input type="button"
-                                onChange={onTest}
-                                checked={postItem.isLike}
-                                style={{fill: heartFill}}
-                                /> */}
-                            
-                            <button onClick={onPostChangeHandler} className="heart">
-                                <FavoriteIcon style = {{fill: heartFill}} />
-                            </button>
-                        </div>                        
-                        <div>    
-                            {/* <button onClick = {(e) => {propsiki.likedPost()}}> */}
-                            {/* <button onClick={onPostChangeHandler}></button> */}
-                        </div>
-                        <br />
-                    </li> 
-                })
+                        const onPostChangeHandler = () => {
+                            propsiki.changePostLiked(postItem.id, !postItem.isLike);
+                        }
+                        
+                        const heartFill = postItem.isLike ? 'red' : '#DBD7D2';
+                        
+                        // debugger;
+                        return <li key={postItem.id}>
+                                    <span className="title">{postItem.title}</span>
+                                    <p>{postItem.body}
+                                        <button onClick={onDeleteHandler} className="deleteBtn">
+                                            <DeleteForeverIcon />
+                                        </button>
+                                    </p>
+                                    <div>
+                                        <button onClick={onPostChangeHandler} className="heart">
+                                            <FavoriteIcon style = {{fill: heartFill}} />
+                                        </button>
+                                    </div>                        
+                                    <br />
+                                </li> 
+                    })
                 // map - это метод массива, который на основе каждого элемента в массиве создает какой-то другой элемент, на выходе получаем массив с этими новыми элементами
             }
         </ul>
         <div>
             <button onClick={onAllClickHandler}>All posts</button>
             <button onClick={onFavoritesClickHandler}>Favorites posts</button>
-            {/* <button className={ propsiki.filter === 'all' ? "active-filter" : ""} onClick={onAllClickHandler}>All posts</button>
-            <button className={ propsiki.filter === 'favorites' ? "active-filter" : ""} onClick={onFavoritesClickHandler}>Favorites posts</button> */}
         </div>
       </div>
     )
