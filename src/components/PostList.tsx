@@ -20,7 +20,8 @@ type PropsType = {
     changeFilter: (value: FilterValuesType) => void
     deletePost: (id: string) => void
     addPost: (title: string, body: string) => void
-    changePostLiked: (postItem: string, isLike: boolean) => void 
+    changePostLiked: (postItem: string, isLike: boolean) => void
+    // findPost: () => void
 }
 
 
@@ -63,6 +64,13 @@ export function PostList(propsiki: PropsType) {
     const onFavoritesClickHandler = () => propsiki.changeFilter('favorites');
 
 
+    const [searchTerm, setSearchTerm] = useState('');
+    console.log(searchTerm);
+
+    const handleChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+        setSearchTerm(e.target.value)
+      }
+
     return (
       <div>
         <h3>{propsiki.mainTitle}</h3>
@@ -82,7 +90,8 @@ export function PostList(propsiki: PropsType) {
                 onChange={onNewBodyChangeHandler}
                 onKeyPress={onKeyPressHandler}
                 className = { error ? 'error' : "" }  
-            /> 
+            />
+
             {/* <button onClick={(e) => {
                 propsiki.addPost(newPostTitle, newPostBody);
                 setNewPostTitle("");
@@ -92,14 +101,44 @@ export function PostList(propsiki: PropsType) {
             <button onClick={addPost}>+</button> 
             { error && <div className="error-message">{error}</div> }
         </div>
-        <br />
+            <br />
         <div>
-            <input placeholder="Find a Post"/>
+            <input 
+                autoFocus
+                autoComplete='off'
+                type="text"
+                placeholder="Search post by title"
+                className="search_input"
+                id='search'
+                onChange = {handleChange} 
+            />
         </div>
+        <br />
+{/* /////////////////////////////////////        */}
+        {/* <div>
+            <div className="form">
+                <form className="search_form">
+                    <input 
+                        autoFocus
+                        autoComplete='off'
+                        type="text"
+                        placeholder="Search post by title"
+                        className="search_input"
+                        // onChange = {(event) => setSearchTerm(event.target.value)} 
+                    />
+                </form>
+            </div>
+        </div> */}
+{/* /////////////////////////////////////        */}
+
 
         <ul>
             {
-                propsiki.posts.map(postItem => {
+                propsiki.posts.filter((postItem) => {
+                    return searchTerm.toLowerCase() === '' ? postItem : postItem.title.toLowerCase().includes(searchTerm)
+                })
+                
+                .map(postItem => {
                     const onDeleteHandler = () => {propsiki.deletePost(postItem.id)};
                 
                     const onPostChangeHandler = () => {
